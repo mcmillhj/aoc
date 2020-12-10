@@ -76,7 +76,6 @@ while (my $boarding_pass = readline(\*DATA)) {
 }
 
 say $max;
-say(((($max + 1) * $max - ($min - 1) * $min) / 2) - $sum);
 
 # --- Part Two ---
 
@@ -87,6 +86,7 @@ say(((($max + 1) * $max - ($min - 1) * $min) / 2) - $sum);
 # Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
 
 # What is the ID of your seat?
+say(((($max + 1) * $max - ($min - 1) * $min) / 2) - $sum);
 
 __DATA__
 FBBBBBBRRL
