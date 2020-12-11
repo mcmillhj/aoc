@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use feature qw(say);
-use List::Util qw(sum);
 
 # --- Day 5: Binary Boarding ---
 
