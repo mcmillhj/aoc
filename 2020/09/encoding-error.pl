@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use feature qw(say);
-use Data::Dumper;
 
 # --- Day 9: Encoding Error ---
 
