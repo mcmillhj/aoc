@@ -18,11 +18,16 @@ sub lanternfish(Int $age, Int $day) is cached {
   return lanternfish($age - 1, $day - 1);
 }
 
-my @fish = 'input'.IO.lines.split(',')>>.Int;
 
-my $population = 0;
-for @fish -> $fish {
-  $population += lanternfish($fish, 80);
+sub evolve(Int @fish, Int $days) {
+  my $population = 0;
+  for @fish -> $fish {
+    $population += lanternfish($fish, $days);
+  }
+
+  return $population;
 }
 
-say $population;
+my Int @fish = 'input'.IO.lines.split(',')>>.Int;
+say evolve(@fish, 80);
+say evolve(@fish, 256);
