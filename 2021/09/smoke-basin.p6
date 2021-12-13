@@ -39,8 +39,6 @@ sub neighbors(Int $x, Int $y) {
 my $rows = @data.end;
 my $columns = @data[0].end;
 
-say { rows => $rows, columns => $columns };
-
 sub is-valid-neighbor(Int $x, Int $y) {
   0 <= $x <= $rows && 0 <= $y <= $columns;
 }
