@@ -1,3 +1,5 @@
+#!raku 
+
 my @calorie-groups = 'input'.IO.slurp.split("\n\n");
 
 # part1 
