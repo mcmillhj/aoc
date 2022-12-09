@@ -54,8 +54,13 @@ for 'input'.IO.lines>>.split(" ") -> ($command, $distance) {
       my $head = @knots[$idx - 1];
       my $tail = @knots[$idx];
 
+      my $dx = $head.x - $tail.x;
+      my $dy = $head.y - $tail.y;
+
       # if the tail is already adjacent to the head then the tail does not need to move
-      next if $head.adjacents.grep: -> $a { $tail.x == $a.x and $tail.y == $a.y };
+      # 0 = tail is on top of head
+      # 1 = tail is adjacent to head
+      next if $dx.abs < 2 and $dy.abs < 2;
 
       # move the tail based on the relative direction of the head
       # (1 - 0).sign, (-1, 0).sign => (1, -1) 
