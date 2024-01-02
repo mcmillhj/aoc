@@ -1,31 +1,20 @@
 #!raku
 
-    my @histories = $*IN.lines>>.comb(/'-'?\d+/)>>.Int;
+use lib '..';
+use AOCUtils;
 
-    say "Part 1: "
-        ~ [+] @histories.map(-> @history { next-reading(@history) });
-    say "Part 2: "
-        ~ [+] @histories.map(-> @history { previous-reading(@history) });
+my @histories = $*IN.lines>>.comb(/'-'?\d+/)>>.Int;
 
-    sub differences(@history) {
-        @history.rotor(2 => -1).map(-> ($a, $b) { $b - $a }).Array
-    }
+say "Part 1: "
+    ~ [+] @histories.map(-> @history { next-reading(@history) });
+say "Part 2: "
+    ~ [+] @histories.map(-> @history { previous-reading(@history) });
 
-    sub successive-differences(@history) {
-        my @differences = (@history.Array,);
+sub next-reading(@history) {
+    [+] successive-differences(@history)>>.tail>>.pop
+}
 
-        repeat {
-            @differences.push: differences(@differences.tail);
-        } until so 0 == @differences.tail.all;
-
-        return @differences;
-    }
-
-    sub next-reading(@history) {
-        [+] successive-differences(@history)>>.tail>>.pop
-    }
-
-    # reverse the input so that the "next" reading is the previous reading
-    sub previous-reading(@history) {
-        next-reading(@history.reverse)
-    }
+# reverse the input so that the "next" reading is the previous reading
+sub previous-reading(@history) {
+    next-reading(@history.reverse)
+}
