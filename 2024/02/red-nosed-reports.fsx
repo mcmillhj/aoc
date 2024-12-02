@@ -24,14 +24,20 @@ let hasUnsafeLevelChange (report: Report) =
         let levelChange = abs (snd reportPair - fst reportPair) in levelChange = 0 || levelChange > 3)
 
 
+let dropOne (report: Report) =
+    let rec loop acc report =
+        match report with
+        | [] -> List.empty
+        | x :: xs -> (acc @ xs) :: loop (acc @ [ x ]) xs
+
+    loop [] report
+
 let isSafeReport (report: Report) =
     (isReportDecreasing report || isReportIncreasing report)
     && not (hasUnsafeLevelChange report)
 
 let isSafeAfterDampening (unsafeReport: Report) =
-    unsafeReport
-    |> List.mapi (fun index level -> index)
-    |> List.exists (fun index -> isSafeReport (List.removeAt index unsafeReport))
+    unsafeReport |> dropOne |> List.exists isSafeReport
 
 let safeReports, unsafeReports = reports |> List.partition isSafeReport
 printf "%d", safeReports.Length
