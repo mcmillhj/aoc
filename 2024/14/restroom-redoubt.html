@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barriecito&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+      }
+
+      body {
+        background-color: #f2f0ef;
+        font-family: "Barriecito", system-ui;
+        font-weight: 400;
+        font-style: normal;
+
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        padding: 2rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        > * {
+          margin-block: 0;
+        }
+
+        > * + * {
+          margin-block-start: 2rem;
+        }
+      }
+
+      .board {
+        position: relative;
+        outline: 2px dashed black;
+        width: var(--board-width);
+        height: var(--board-height);
+      }
+
+      .horizontal__divider {
+        position: absolute;
+        width: 100%;
+        height: var(--robot-size-px);
+        top: calc(50% - (var(--robot-size-px) / 2));
+        border-bottom: 2px dashed red;
+        border-top: 2px dashed red;
+      }
+
+      .vertical__divider {
+        position: absolute;
+        width: var(--robot-size-px);
+        height: 100%;
+        left: calc(50% - (var(--robot-size-px) / 2));
+        border-left: 2px dashed green;
+        border-right: 2px dashed green;
+      }
+
+      .button {
+        font: inherit;
+        background-color: transparent;
+        border: none;
+        border: 1px solid black;
+        outline-offset: 2px;
+        border-radius: 8px;
+        width: 200px;
+        height: 50px;
+      }
+
+      .button:focus-within {
+        outline: 2px dashed royalblue;
+      }
+    </style>
+    <script type="text/javascript">
+      const colors = [
+        "brown",
+        "crimson",
+        "darkred",
+        "deeppink",
+        "firebrick",
+        "hotpink",
+        "indianred",
+        "lavenderblush",
+        "lightcoral",
+        "lightpink",
+        "maroon",
+        "mistyrose",
+        "palevioletred",
+        "pink",
+        "red",
+        "bisque",
+        "coral",
+        "darkorange",
+        "darksalmon",
+        "lightsalmon",
+        "orange",
+        "orangered",
+        "papayawhip",
+        "peachpuff",
+        "salmon",
+        "tomato",
+        "beige",
+        "cornsilk",
+        "darkgoldenrod",
+        "darkkhaki",
+        "gold",
+        "goldenrod",
+        "khaki",
+        "lemonchiffon",
+        "lightgoldenrodyellow",
+        "lightyellow",
+        "palegoldenrod",
+        "yellow",
+        "aquamarine",
+        "chartreuse",
+        "darkgreen",
+        "darkolivegreen",
+        "darkseagreen",
+        "darkslategray",
+        "darkslategrey",
+        "forestgreen",
+        "green",
+        "greenyellow",
+        "honeydew",
+        "lawngreen",
+        "lightgreen",
+        "lightseagreen",
+        "lime",
+        "limegreen",
+        "mediumaquamarine",
+        "mediumseagreen",
+        "mediumspringgreen",
+        "olive",
+        "olivedrab",
+        "palegreen",
+        "seagreen",
+        "springgreen",
+        "teal",
+        "yellowgreen",
+        "aliceblue",
+        "aqua",
+        "azure",
+        "blue",
+        "cadetblue",
+        "cornflowerblue",
+        "cyan",
+        "darkblue",
+        "darkcyan",
+        "darkturquoise",
+        "deepskyblue",
+        "dodgerblue",
+        "lightblue",
+        "lightcyan",
+        "lightskyblue",
+        "lightsteelblue",
+        "mediumblue",
+        "mediumturquoise",
+        "midnightblue",
+        "navy",
+        "paleturquoise",
+        "powderblue",
+        "royalblue",
+        "skyblue",
+        "steelblue",
+        "turquoise",
+        "blueviolet",
+        "darkmagenta",
+        "darkorchid",
+        "darkslateblue",
+        "darkviolet",
+        "fuchsia",
+        "indigo",
+        "lavender",
+        "magenta",
+        "mediumorchid",
+        "mediumpurple",
+        "mediumslateblue",
+        "mediumvioletred",
+        "orchid",
+        "plum",
+        "purple",
+        "rebeccapurple",
+        "slateblue",
+        "thistle",
+        "violet",
+        "antiquewhite",
+        "blanchedalmond",
+        "burlywood",
+        "chocolate",
+        "linen",
+        "moccasin",
+        "navajowhite",
+        "oldlace",
+        "peru",
+        "rosybrown",
+        "saddlebrown",
+        "sandybrown",
+        "sienna",
+        "tan",
+        "wheat",
+        "black",
+        "darkgray",
+        "darkgrey",
+        "dimgray",
+        "dimgrey",
+        "floralwhite",
+        "gainsboro",
+        "ghostwhite",
+        "gray",
+        "grey",
+        "ivory",
+        "lightgray",
+        "lightgrey",
+        "lightslategray",
+        "lightslategrey",
+        "mintcream",
+        "seashell",
+        "silver",
+        "slategray",
+        "slategrey",
+        "snow",
+        "white",
+        "whitesmoke",
+      ];
+
+      window.getRandomColor = function getRandomColor() {
+        return colors[Math.floor(Math.random() * colors.length)];
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Restroom Redoubt</h1>
+    <input type="file" id="puzzle-input" accept=".txt" />
+    <div style="display: flex; gap: 1rem">
+      <div id="board" class="board">
+        <div class="horizontal__divider"></div>
+        <div class="vertical__divider"></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1rem">
+        <button id="move-button" class="button">Move</button>
+        <button id="move-100-button" class="button">Move x100</button>
+        <button id="move-infinity-button" class="button">Move &infin;</button>
+        <button id="stop-button" class="button">Stop</button>
+        <button id="calculate-safety-factor-button" class="button">
+          Calculate Safety Factor
+        </button>
+        <p>Seconds elapsed: <span id="seconds">0</span></p>
+        <p>Safety factor: <span id="safety-factor">1</span></p>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      let STOP = false;
+      const ROBOT_SIZE_PX = 6;
+      const BOARD_WIDTH = 101 * ROBOT_SIZE_PX;
+      const BOARD_HEIGHT = 103 * ROBOT_SIZE_PX;
+
+      const board = document.getElementById("board");
+      document.documentElement.style.setProperty(
+        "--robot-size-px",
+        ROBOT_SIZE_PX + "px"
+      );
+      document.documentElement.style.setProperty(
+        "--board-width",
+        BOARD_WIDTH + "px"
+      );
+      document.documentElement.style.setProperty(
+        "--board-height",
+        BOARD_HEIGHT + "px"
+      );
+
+      // move all robots to the next position based on their velocity
+      function move() {
+        // The JavaScript `%` operator does not handle negative numbers
+        function mod(n, m) {
+          return ((n % m) + m) % m;
+        }
+
+        const robots = document.querySelectorAll(["[data-robot]"]);
+
+        for (const robot of robots) {
+          const newX = mod(
+            Number(robot.dataset.x) + Number(robot.dataset.vx),
+            BOARD_WIDTH
+          );
+          const newY = mod(
+            Number(robot.dataset.y) + Number(robot.dataset.vy),
+            BOARD_HEIGHT
+          );
+
+          updateRobot(robot.id, newX, newY);
+        }
+
+        updateSeconds();
+      }
+
+      async function moveN(n) {
+        for (let i = 0; i < n; i++) {
+          if (STOP) {
+            break;
+          }
+
+          move();
+          await new Promise((resolve) => setTimeout(resolve, 5));
+        }
+      }
+
+      // update the position of an individual robot
+      function updateRobot(id, newX, newY) {
+        const robot = document.getElementById(id);
+        robot.style.left = `${newX}px`;
+        robot.style.top = `${newY}px`;
+        robot.dataset.x = newX;
+        robot.dataset.y = newY;
+      }
+
+      // update the # of seconds displayed in the UI
+      function updateSeconds() {
+        const seconds = document.getElementById("seconds");
+        seconds.innerText = Number(seconds.innerText) + 1;
+      }
+
+      function parseRobotSpecification(line) {
+        const [rx, ry, vx, vy] = line.match(/-?\d+/g).map(Number);
+
+        return {
+          position: { x: rx, y: ry },
+          velocity: { x: vx, y: vy },
+        };
+      }
+
+      // add all robots to the board
+      // use data attributes to hold the state of x, y, vx, and vy
+      function createRobots(robots) {
+        for (const [id, robot] of robots.entries()) {
+          const x = robot.position.x * ROBOT_SIZE_PX;
+          const y = robot.position.y * ROBOT_SIZE_PX;
+          const vx = robot.velocity.x * ROBOT_SIZE_PX;
+          const vy = robot.velocity.y * ROBOT_SIZE_PX;
+
+          const r = document.createElement("div");
+          r.style = `
+          position: absolute;
+          background-color: ${getRandomColor()};
+          top: ${y}px;
+          left: ${x}px;
+          width: ${ROBOT_SIZE_PX}px;
+          height: ${ROBOT_SIZE_PX}px;
+          `;
+          r.dataset.robot = true;
+          r.id = `robot-${id}`;
+          r.dataset.x = x;
+          r.dataset.y = y;
+          r.dataset.vx = vx;
+          r.dataset.vy = vy;
+
+          board.appendChild(r);
+        }
+      }
+
+      // use IntersectionObserver API (https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to simplify the calculation of
+      // the safety factor.
+      //
+      // Set up a separate IntersectionObserver for each quadrant of the board: Top Left, Top Right, Bottom Left, and Bottom Right.
+      // Use the `rootMargin` to narrow the bounding box of each observer to a specific quadrant
+      // Set `threshold` to `1.0` to mark an robot as intersecting if 100% of the robot is in the quadrant. This automatically removes all elements not fully in the quadrants.
+      function calculateSafetyFactor() {
+        const topLeftQuadrantObserver = new IntersectionObserver(
+          (entries) => {
+            console.log({
+              TOP_LEFT: entries.filter((entry) => entry.isIntersecting).length,
+            });
+
+            const safetyFactor = document.getElementById("safety-factor");
+            safetyFactor.innerText =
+              Number(safetyFactor.innerText) *
+              entries.filter((entry) => entry.isIntersecting).length;
+          },
+          {
+            root: document.getElementById("board"),
+            /* top | right | bottom | left */
+            rootMargin: "0px -50% -50% 0px",
+            threshold: 1.0,
+          }
+        );
+
+        const topRightQuadrantObserver = new IntersectionObserver(
+          (entries) => {
+            console.log({
+              TOP_RIGHT: entries.filter((entry) => entry.isIntersecting).length,
+            });
+
+            const safetyFactor = document.getElementById("safety-factor");
+            safetyFactor.innerText =
+              Number(safetyFactor.innerText) *
+              entries.filter((entry) => entry.isIntersecting).length;
+          },
+          {
+            root: document.getElementById("board"),
+            /* top | right | bottom | left */
+            rootMargin: "0px 0px -50% -50%",
+            threshold: 1.0,
+          }
+        );
+
+        const bottomLeftQuadrantObserver = new IntersectionObserver(
+          (entries) => {
+            console.log({
+              BOTTOM_LEFT: entries.filter((entry) => entry.isIntersecting)
+                .length,
+            });
+
+            const safetyFactor = document.getElementById("safety-factor");
+            safetyFactor.innerText =
+              Number(safetyFactor.innerText) *
+              entries.filter((entry) => entry.isIntersecting).length;
+          },
+          {
+            root: document.getElementById("board"),
+            /* top | right | bottom | left */
+            rootMargin: "-50% -50% 0px 0px",
+            threshold: 1.0,
+          }
+        );
+
+        const bottomRightQuadrantObserver = new IntersectionObserver(
+          (entries) => {
+            console.log({
+              BOTTOM_RIGHT: entries.filter((entry) => entry.isIntersecting)
+                .length,
+            });
+
+            const safetyFactor = document.getElementById("safety-factor");
+            safetyFactor.innerText =
+              Number(safetyFactor.innerText) *
+              entries.filter((entry) => entry.isIntersecting).length;
+          },
+          {
+            root: document.getElementById("board"),
+            /* top | right | bottom | left */
+            rootMargin: "-50% 0px 0px -50%",
+            threshold: 1.0,
+          }
+        );
+
+        // observe robot intersections in each of the 4 quadrants
+        for (const r of document.querySelectorAll("[data-robot]")) {
+          topLeftQuadrantObserver.observe(r);
+          topRightQuadrantObserver.observe(r);
+          bottomLeftQuadrantObserver.observe(r);
+          bottomRightQuadrantObserver.observe(r);
+        }
+      }
+
+      const puzzleInputElement = document.getElementById("puzzle-input");
+      puzzleInputElement.addEventListener("change", (event) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const robotSpecifications = e.target.result
+            .split("\n")
+            .filter(Boolean)
+            .map((spec) => parseRobotSpecification(spec));
+
+          createRobots(robotSpecifications);
+        };
+        reader.readAsText(event.target.files[0]);
+      });
+
+      const moveButton = document.getElementById("move-button");
+      moveButton.addEventListener("click", () => {
+        STOP = false;
+
+        move();
+      });
+
+      const move100Button = document.getElementById("move-100-button");
+      move100Button.addEventListener("click", () => {
+        STOP = false;
+
+        moveN(100);
+      });
+
+      const moveInfinityButton = document.getElementById(
+        "move-infinity-button"
+      );
+      moveInfinityButton.addEventListener("click", () => {
+        STOP = false;
+
+        // because of the board dimensions, the robots will loop infinitely on this cycle
+        moveN(BOARD_HEIGHT * BOARD_WIDTH);
+      });
+
+      const calculateSafetyFactorButton = document.getElementById(
+        "calculate-safety-factor-button"
+      );
+      calculateSafetyFactorButton.addEventListener("click", () => {
+        calculateSafetyFactor();
+      });
+
+      const stopButton = document.getElementById("stop-button");
+      stopButton.addEventListener("click", () => {
+        STOP = true;
+      });
+    </script>
+  </body>
+</html>
