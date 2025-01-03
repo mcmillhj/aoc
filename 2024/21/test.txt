@@ -1,0 +1,52 @@
+SUBSEQS = <; ^; ^^>; vvv
+
+<A: 2
+    v<<A>>^A: 1
+        v<< ->
+            v<A<AA>>^A: 0 (LENGTH = 10)
+            <vA<AA>>^A: 0 (LENGTH = 10)
+        >>^ ->
+            vAA^<A>A: 0 (LENGTH = 8)
+            vAA<^A>A: 0 (LENGTH = 8)
+    <v<A>>^A: 1
+        <v< -> 
+            v<<A>A<A>>^A: 0 (LENGTH = 12)
+            <v<A>A<A>>^A: 0 (LENGTH = 12)
+        >>^ -> 
+            vAA^<A>A: 0 (LENGTH = 8)
+            vAA<^A>A: 0 (LENGTH = 8)
+
+MIN("<A") = 18
+
+^A: 2
+    <A>A: 1
+        <A -> 
+            v<<A>>^A: 0 (LENGTH = 8)
+            <v<A>>^A: 0 (LENGTH = 8)
+        >A ->
+            vA^A: 0 (LENGTH = 4)
+
+MIN("^A) = 12
+
+^^>A:
+    <AA>vA^A: 1
+        <A -> 
+            v<<A>>^A: 0 (LENGTH = 8)
+            <v<A>>^A: 0 (LENGTH = 8)
+        >vA ->
+            vA<A^>A: 0 (LENGTH = 7)
+            vA<A>^A: 0 (LENGTH = 7)
+        ^A ->
+            <A>A: 0 (LENGTH = 4)
+    <AAv>A^A: 1
+        <A ->
+            v<<A>>^A: 0 (LENGTH = 8)
+            <v<A>>^A: 0 (LENGTH = 8)
+        v>A ->
+            v<A>A^A: 0 (LENGTH = 7)
+            <vA>A^A: 0 (LENGTH = 7)
+        ^A ->
+            <A>A: 0 (LENGTH = 4)
+MIN("^^>A) = 19
+
+vvvA:
